@@ -59,6 +59,17 @@ class XHRAndFetchInterceptor {
     ): void {
       this.uri = uri
       this.method = method
+      // 保存原始的 setRequestHeader 方法
+      if (!this._originalSetRequestHeader) {
+        this._originalSetRequestHeader = this.setRequestHeader
+        this._requestHeaders = new Map()
+
+        // 重写 setRequestHeader 来保存请求头
+        this.setRequestHeader = function (name: string, value: string) {
+          this._requestHeaders!.set(name.toLowerCase(), { name, value })
+          return this._originalSetRequestHeader!.call(this, name, value)
+        }
+      }
       self.originalXHRopen.apply(this, [method, uri, async, user, password])
     }
 
@@ -98,7 +109,16 @@ class XHRAndFetchInterceptor {
             if (newBody) body = newBody
             if (newUrl) {
               this.uri = newUrl.toString()
+              // 保存当前的请求头
+              const savedHeaders = new Map(this._requestHeaders!)
+              // 重新调用 open 方法
               self.originalXHRopen.apply(this, [this.method!, this.uri, true])
+              // 恢复请求头（跳过 content-length，因为 body 可能被修改）
+              savedHeaders.forEach(header => {
+                if (header.name.toLowerCase() !== 'content-length') {
+                  this.setRequestHeader(header.name, header.value)
+                }
+              })
             }
           }
           break // 只应用第一个匹配的配置

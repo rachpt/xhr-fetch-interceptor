@@ -32,6 +32,8 @@ export type IPreCallbackResult = [boolean, { uri?: string; data?: any }]
 export interface XMLHttpRequestWithUrl extends XMLHttpRequest {
   uri?: string
   method?: Methods
+  _requestHeaders?: Map<string, { name: string; value: string }>
+  _originalSetRequestHeader?: typeof XMLHttpRequest.prototype.setRequestHeader
 }
 
 export interface XMLHttpRequestProxy {
