@@ -166,13 +166,13 @@ class XHRAndFetchInterceptor {
 
                     // 使用代理对象的值来模拟XHR对象的行为
                     Object.defineProperties(this, {
-                      status: { get: () => proxy.status },
-                      response: { get: () => proxy.response },
-                      statusText: { get: () => proxy.statusText },
-                      responseXML: { get: () => proxy.responseXML },
-                      responseText: { get: () => proxy.responseText },
-                      responseType: { get: () => proxy.responseType },
-                      readyState: { get: () => proxy.readyState },
+                      status: { get: () => proxy.status, configurable: true },
+                      response: { get: () => proxy.response, configurable: true },
+                      statusText: { get: () => proxy.statusText, configurable: true },
+                      responseXML: { get: () => proxy.responseXML, configurable: true },
+                      responseText: { get: () => proxy.responseText, configurable: true },
+                      responseType: { get: () => proxy.responseType, configurable: true },
+                      readyState: { get: () => proxy.readyState, configurable: true },
                     })
                     // 执行原始事件, 仅响应完成的状态
                     if (originalOnreadystatechange) originalOnreadystatechange.call(xhr, ev)
@@ -192,8 +192,8 @@ class XHRAndFetchInterceptor {
               proxy.response = modifiedResponse
               proxy.responseText = JSON.stringify(modifiedResponse)
               Object.defineProperties(this, {
-                response: { get: () => proxy.response },
-                responseText: { get: () => proxy.responseText },
+                response: { get: () => proxy.response, configurable: true },
+                responseText: { get: () => proxy.responseText, configurable: true },
               })
             }
           }
