@@ -1,6 +1,6 @@
 {
   "name": "xhr-fetch-interceptor",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": false,
   "type": "module",
   "description": "A lightweight JavaScript library for intercepting and modifying XHR and Fetch requests, perfect for browser extensions and Tampermonkey scripts",
